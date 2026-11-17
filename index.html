@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>加入群聊</title>
+<style>
+  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f6f7f9;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;color:#111}
+  .card{width:min(92vw,420px);background:#fff;border-radius:16px;padding:28px 24px;box-shadow:0 8px 30px rgba(0,0,0,.08);text-align:center}
+  h1{font-size:22px;margin:0 0 10px}
+  p{font-size:14px;color:#666;line-height:1.6;margin:0 0 20px}
+  a.btn{display:block;background:#07c160;color:#fff;text-decoration:none;font-size:18px;font-weight:600;padding:14px;border-radius:10px}
+  .hint{font-size:12px;color:#999;margin-top:14px}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>扫码进群</h1>
+  <p>本页长期有效，群邀请每 7 天更新。</p>
+  <a class="btn" id="go" href="#">正在获取最新群邀请…</a>
+  <div class="hint" id="hint">如果按钮没反应，请刷新本页</div>
+</div>
+<script>
+(function(){
+  var go = document.getElementById('go');
+  var hint = document.getElementById('hint');
+  fetch('link.txt?t=' + Date.now(), {cache: 'no-store'})
+    .then(function(r){ if(!r.ok) throw new Error(r.status); return r.text(); })
+    .then(function(t){
+      t = t.trim();
+      if (!/^https:\/\/weixin\.qq\.com\//.test(t)) throw new Error('bad link');
+      go.href = t;
+      go.textContent = '👉 点这里加入群聊';
+      setTimeout(function(){ location.replace(t); }, 600);
+    })
+    .catch(function(){
+      go.textContent = '最新群邀请获取失败';
+      hint.textContent = '请稍后刷新，或联系群主';
+    });
+})();
+</script>
+</body>
+</html>
